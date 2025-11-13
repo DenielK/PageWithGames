@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PageWithGames</name>
+    </assembly>
+    <members>
+        <member name="T:PageWithGames.Resources.Strings.AppResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:PageWithGames.Resources.Strings.AppResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:PageWithGames.Resources.Strings.AppResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:PageWithGames.Resources.Strings.AppResources.Game_Matching">
+            <summary>
+              Looks up a localized string similar to 2. Matching Symbols.
+            </summary>
+        </member>
+        <member name="P:PageWithGames.Resources.Strings.AppResources.Game_Minesweeper">
+            <summary>
+              Looks up a localized string similar to 3. Simple Minesweeper.
+            </summary>
+        </member>
+        <member name="P:PageWithGames.Resources.Strings.AppResources.Game_Puzzle">
+            <summary>
+              Looks up a localized string similar to 4. 5x5 Puzzle.
+            </summary>
+        </member>
+        <member name="P:PageWithGames.Resources.Strings.AppResources.Game_TicTacToe">
+            <summary>
+              Looks up a localized string similar to 1. Tic-Tac-Toe.
+            </summary>
+        </member>
+        <member name="P:PageWithGames.Resources.Strings.AppResources.Language">
+            <summary>
+              Looks up a localized string similar to Language.
+            </summary>
+        </member>
+        <member name="P:PageWithGames.Resources.Strings.AppResources.SelectGame">
+            <summary>
+              Looks up a localized string similar to Select a game:.
+            </summary>
+        </member>
+        <member name="P:PageWithGames.Resources.Strings.AppResources.Theme">
+            <summary>
+              Looks up a localized string similar to Theme.
+            </summary>
+        </member>
+        <member name="P:PageWithGames.Resources.Strings.AppResources.Welcome">
+            <summary>
+              Looks up a localized string similar to Welcome to the Games Collection!.
+            </summary>
+        </member>
+        <member name="T:PageWithGames.Resources.Strings.Resource2">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:PageWithGames.Resources.Strings.Resource2.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:PageWithGames.Resources.Strings.Resource2.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="T:PageWithGames.Resource">
+            <summary>
+            Android Resource Designer class.
+            Exposes the Android Resource designer assembly into the project Namespace.
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PageWithGames.TicTacToeGamePage"
+             Title="Крестики-нолики">
+
+    <Grid x:Name="GameBoard"
+          RowDefinitions="*,*,*, Auto"
+          ColumnDefinitions="*,*,*"
+          Padding="10"
+          ColumnSpacing="5" RowSpacing="5"
+          BackgroundColor="White">
+
+        <Label x:Name="StatusLabel"
+               Grid.Row="3" Grid.ColumnSpan="3"
+               Text="Ход игрока X"
+               FontSize="20"
+               HorizontalOptions="Center"
+               VerticalOptions="Center" />
+
+        <Button Text="Новая игра"
+                Grid.Row="3" Grid.Column="2"
+                HorizontalOptions="End"
+                Clicked="OnRestartClicked" />
+
+    </Grid>
+</ContentPage>

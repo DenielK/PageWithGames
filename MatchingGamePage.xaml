@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PageWithGames.MatchingGamePage"
+             Title="Парные символы">
+
+    <VerticalStackLayout Spacing="10" Padding="15">
+
+        <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
+            <Label x:Name="StatusLabel" 
+                   Text="Найдите все пары!" 
+                   FontSize="22"
+                   VerticalOptions="Center" />
+
+            <Button Text="Перезапуск" 
+                    Clicked="OnRestartClicked"
+                    WidthRequest="120" />
+        </HorizontalStackLayout>
+
+        <BoxView HeightRequest="1" Color="{AppThemeBinding Light=Gray, Dark=LightGray}" Margin="0, 5, 0, 15" />
+
+        <Grid x:Name="GameGrid" 
+              RowDefinitions="*,*,*,*" 
+              ColumnDefinitions="*,*,*,*"
+              VerticalOptions="Fill"
+              HorizontalOptions="Fill"
+              ColumnSpacing="10"
+              RowSpacing="10"
+              Padding="5">
+
+        </Grid>
+
+    </VerticalStackLayout>
+</ContentPage>

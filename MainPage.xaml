@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:strings="clr-namespace:PageWithGames.Resources.Strings"
+             x:Class="PageWithGames.MainPage"
+             Title="Выбор игры">
+    <Grid RowDefinitions="*, 5*" ColumnDefinitions="*" Padding="20">
+
+        <Grid Grid.Row="0"
+              ColumnDefinitions="*, Auto, Auto"
+              ColumnSpacing="10"
+              VerticalOptions="Start">
+
+            <Label Grid.Column="0"
+                   Text="{x:Static strings:AppResources.Welcome}"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   VerticalOptions="Center" />
+
+            <Button Text="{x:Static strings:AppResources.Theme}"
+                    Grid.Column="1"
+                    WidthRequest="100"
+                    HeightRequest="44"
+                    Clicked="OnThemeToggled" />
+
+            <Button Text="{x:Static strings:AppResources.Language}"
+                    Grid.Column="2"
+                    WidthRequest="100"
+                    HeightRequest="44"
+                    Clicked="OnLanguageClicked" />
+        </Grid>
+
+        <VerticalStackLayout Grid.Row="1"
+                             Spacing="20"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center">
+
+            <Label Text="{x:Static strings:AppResources.SelectGame}"
+                   FontSize="24"
+                   HorizontalOptions="Center"
+                   Margin="0, 0, 0, 10"/>
+
+            <Button Text="{x:Static strings:AppResources.Game_TicTacToe}"
+                    Style="{StaticResource GameButton}"
+                    Clicked="OnGameSelected"
+                    CommandParameter="TicTacToe" />
+
+            <Button Text="{x:Static strings:AppResources.Game_Matching}"
+                    Style="{StaticResource GameButton}"
+                    Clicked="OnGameSelected"
+                    CommandParameter="MatchingGame" />
+
+            <Button Text="{x:Static strings:AppResources.Game_Minesweeper}"
+                    Style="{StaticResource GameButton}"
+                    Clicked="OnGameSelected"
+                    CommandParameter="Minesweeper" />
+
+            <Button Text="{x:Static strings:AppResources.Game_Puzzle}"
+                    Style="{StaticResource GameButton}"
+                    Clicked="OnGameSelected"
+                    CommandParameter="Puzzle" />
+
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>
