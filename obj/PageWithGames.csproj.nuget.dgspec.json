@@ -71,6 +71,10 @@
               "target": "Package",
               "version": "[9.0.2, )"
             },
+            "CommunityToolkit.Maui.Core": {
+              "target": "Package",
+              "version": "[9.0.2, )"
+            },
             "Microsoft.Extensions.Logging.Debug": {
               "target": "Package",
               "version": "[9.0.8, )"
@@ -111,6 +115,10 @@
           "targetAlias": "net9.0-ios",
           "dependencies": {
             "CommunityToolkit.Maui": {
+              "target": "Package",
+              "version": "[9.0.2, )"
+            },
+            "CommunityToolkit.Maui.Core": {
               "target": "Package",
               "version": "[9.0.2, )"
             },
@@ -157,6 +165,10 @@
               "target": "Package",
               "version": "[9.0.2, )"
             },
+            "CommunityToolkit.Maui.Core": {
+              "target": "Package",
+              "version": "[9.0.2, )"
+            },
             "Microsoft.Extensions.Logging.Debug": {
               "target": "Package",
               "version": "[9.0.8, )"
@@ -198,6 +210,10 @@
           "targetAlias": "net9.0-windows10.0.19041.0",
           "dependencies": {
             "CommunityToolkit.Maui": {
+              "target": "Package",
+              "version": "[9.0.2, )"
+            },
+            "CommunityToolkit.Maui.Core": {
               "target": "Package",
               "version": "[9.0.2, )"
             },

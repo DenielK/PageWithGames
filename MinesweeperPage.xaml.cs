@@ -1,52 +1,52 @@
-﻿using CommunityToolkit.Maui.Core; // <-- ИСПРАВЛЕННОЕ ПРОСТРАНСТВО ИМЕН
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Microsoft.Maui.Controls;
-using System.Windows.Input;
+using System.Timers;
+using Timer = System.Timers.Timer;
+using Microsoft.Maui.ApplicationModel;
 
 namespace PageWithGames;
 
 public partial class MinesweeperPage : ContentPage
 {
     private const int GridSize = 8;
-    private const int TotalMines = 10; // 10 мин для поля 8x8
+    private const int TotalMines = 10;
 
-    // Структура для хранения состояния каждой ячейки
     private class Cell
     {
         public bool IsMine { get; set; } = false;
         public int NeighborMines { get; set; } = 0;
         public bool IsRevealed { get; set; } = false;
-        public bool IsFlagged { get; set; } = false; // Отслеживание флажка
+        public bool IsFlagged { get; set; } = false;
         public Button? Button { get; set; }
     }
 
     private Cell[,] gameGrid = new Cell[GridSize, GridSize];
     private bool isGameOver = false;
     private int unrevealedSafeCells;
-    private int flagsPlaced = 0; // Счетчик флажков
+    private int flagsPlaced = 0;
 
-    // Команда, необходимая для LongPressGestureRecognizer
-    public ICommand OnCellLongPressedCommand { get; }
+    //Long Press
+    private Timer? longPressTimer;
+    private bool isLongPress = false;
+    private const int LongPressTimeMs = 500; // 0.5 секунды
+    private string? currentPressedCellId;
 
-    // Цвета для чисел (0, 1, 2, 3...)
     private readonly Dictionary<int, Color> NumberColors = new()
     {
-        { 1, Color.FromArgb("#0000FF") }, // Синий
-        { 2, Color.FromArgb("#008000") }, // Зеленый
-        { 3, Color.FromArgb("#FF0000") }, // Красный
-        { 4, Color.FromArgb("#000080") }, // Темно-синий
-        { 5, Color.FromArgb("#800000") }, // Бордовый
-        { 6, Color.FromArgb("#008080") }, // Бирюзовый
-        { 7, Color.FromArgb("#000000") }, // Черный
-        { 8, Color.FromArgb("#808080") }  // Серый
+        { 1, Color.FromArgb("#0000FF") },
+        { 2, Color.FromArgb("#008000") },
+        { 3, Color.FromArgb("#FF0000") },
+        { 4, Color.FromArgb("#000080") },
+        { 5, Color.FromArgb("#800000") },
+        { 6, Color.FromArgb("#008080") },
+        { 7, Color.FromArgb("#000000") },
+        { 8, Color.FromArgb("#808080") }
     };
 
     public MinesweeperPage()
     {
         InitializeComponent();
-        // Инициализация команды для долгого нажатия
-        OnCellLongPressedCommand = new Command<string>(OnCellLongPressedExecuted);
         InitializeGrid();
     }
 
@@ -62,7 +62,6 @@ public partial class MinesweeperPage : ContentPage
         flagsPlaced = 0;
         unrevealedSafeCells = GridSize * GridSize - TotalMines;
 
-        // Инициализация ячеек и кнопок
         for (int r = 0; r < GridSize; r++)
         {
             for (int c = 0; c < GridSize; c++)
@@ -72,20 +71,13 @@ public partial class MinesweeperPage : ContentPage
                 var button = new Button
                 {
                     Text = "",
-                    BackgroundColor = Color.FromArgb("#C0C0C0"), // Серый
+                    BackgroundColor = Color.FromArgb("#C0C0C0"),
                     TextColor = Colors.Black,
                     AutomationId = $"{r},{c}"
                 };
 
-                button.Clicked += OnCellClicked;
-
-                // --- Добавление Long Press Gesture Recognizer ---
-                // Используем полное пространство имен, чтобы избежать ошибки
-                var longPressRecognizer = new CommunityToolkit.Maui.Core.LongPressGestureRecognizer();
-                longPressRecognizer.Command = OnCellLongPressedCommand;
-                longPressRecognizer.CommandParameter = button.AutomationId;
-
-                button.GestureRecognizers.Add(longPressRecognizer);
+                button.Pressed += OnCellPressed;
+                button.Released += OnCellReleased;
 
                 gameGrid[r, c].Button = button;
                 Grid.SetRow(button, r);
@@ -126,12 +118,11 @@ public partial class MinesweeperPage : ContentPage
                 if (gameGrid[r, c].IsMine) continue;
 
                 int mineCount = 0;
-                // Проверяем 8 соседей
                 for (int dr = -1; dr <= 1; dr++)
                 {
                     for (int dc = -1; dc <= 1; dc++)
                     {
-                        if (dr == 0 && dc == 0) continue; // Текущая ячейка
+                        if (dr == 0 && dc == 0) continue;
 
                         int nr = r + dr;
                         int nc = c + dc;
@@ -150,16 +141,61 @@ public partial class MinesweeperPage : ContentPage
         }
     }
 
-    // --- ОБРАБОТЧИКИ КЛИКОВ И ФЛАГОВ ---
-
-    private void OnCellClicked(object? sender, EventArgs e)
+    private void OnCellPressed(object? sender, EventArgs e)
     {
         if (isGameOver) return;
-
         var button = sender as Button;
         if (button == null) return;
 
-        var positions = button.AutomationId.Split(',');
+        currentPressedCellId = button.AutomationId;
+        isLongPress = false;
+
+        longPressTimer?.Dispose();
+
+        longPressTimer = new Timer(LongPressTimeMs);
+        longPressTimer.Elapsed += (s, args) =>
+        {
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                if (currentPressedCellId == button.AutomationId)
+                {
+                    isLongPress = true;
+                    ToggleFlagExecuted(currentPressedCellId);
+                }
+            });
+            longPressTimer.Dispose();
+            longPressTimer = null;
+        };
+        longPressTimer.AutoReset = false;
+        longPressTimer.Start();
+    }
+
+    private void OnCellReleased(object? sender, EventArgs e)
+    {
+        if (isGameOver) return;
+        var button = sender as Button;
+        if (button == null) return;
+
+        if (longPressTimer != null)
+        {
+            longPressTimer.Stop();
+            longPressTimer.Dispose();
+            longPressTimer = null;
+
+            // Если это не было долгим нажатием, обрабатываем как обычный клик
+            if (!isLongPress && currentPressedCellId == button.AutomationId)
+            {
+                OnCellClickedExecuted(currentPressedCellId);
+            }
+        }
+
+        isLongPress = false;
+        currentPressedCellId = null;
+    }
+
+    private void OnCellClickedExecuted(string automationId)
+    {
+        var positions = automationId.Split(',');
         int r = int.Parse(positions[0]);
         int c = int.Parse(positions[1]);
 
@@ -172,8 +208,7 @@ public partial class MinesweeperPage : ContentPage
         CheckForWin();
     }
 
-    // Исполняемая команда для LongPressGestureRecognizer (флаг)
-    private void OnCellLongPressedExecuted(string? automationId)
+    private void ToggleFlagExecuted(string? automationId)
     {
         if (isGameOver) return;
         if (automationId == null) return;
@@ -188,52 +223,47 @@ public partial class MinesweeperPage : ContentPage
     private void ToggleFlag(int r, int c)
     {
         var cell = gameGrid[r, c];
-        if (cell.IsRevealed) return; // Нельзя ставить флаг на открытую ячейку
+        if (cell.IsRevealed) return;
 
         if (cell.IsFlagged)
         {
-            // Снять флажок
             cell.IsFlagged = false;
             flagsPlaced--;
             cell.Button!.Text = "";
-            cell.Button.IsEnabled = true; // Разблокировать для обычного клика
+            cell.Button.IsEnabled = true;
         }
-        else if (flagsPlaced < TotalMines) // Нельзя ставить больше флажков, чем мин
+        else if (flagsPlaced < TotalMines)
         {
-            // Установить флажок
             cell.IsFlagged = true;
             flagsPlaced++;
             cell.Button!.Text = "🚩";
-            cell.Button.IsEnabled = false; // Блокируем кнопку
+            cell.Button.IsEnabled = false;
         }
 
         StatusLabel.Text = $"Найдено мин: {flagsPlaced}/{TotalMines}";
     }
 
-    // --- ОСНОВНАЯ ЛОГИКА ИГРЫ ---
 
     private void RevealCell(int r, int c)
     {
         if (r < 0 || r >= GridSize || c < 0 || c >= GridSize) return;
 
         var cell = gameGrid[r, c];
-        if (cell.IsRevealed || cell.IsFlagged) return; // Игнорируем флаги при раскрытии
+        if (cell.IsRevealed || cell.IsFlagged) return;
 
         cell.IsRevealed = true;
 
-        // 1. Попали на мину?
         if (cell.IsMine)
         {
             cell.Button!.Text = "💣";
             cell.Button.BackgroundColor = Colors.Red;
-            EndGame(false); // Поражение
+            EndGame(false);
             return;
         }
 
-        // 2. Безопасная ячейка с соседями
         unrevealedSafeCells--;
         cell.Button!.IsEnabled = false;
-        cell.Button.BackgroundColor = Color.FromArgb("#E0E0E0"); // Светло-серый
+        cell.Button.BackgroundColor = Color.FromArgb("#E0E0E0");
 
         if (cell.NeighborMines > 0)
         {
@@ -242,7 +272,6 @@ public partial class MinesweeperPage : ContentPage
         }
         else
         {
-            // 3. Пустая ячейка (NeighborMines == 0). Раскрываем соседей рекурсивно
             for (int dr = -1; dr <= 1; dr++)
             {
                 for (int dc = -1; dc <= 1; dc++)
@@ -258,7 +287,7 @@ public partial class MinesweeperPage : ContentPage
     {
         if (unrevealedSafeCells == 0)
         {
-            EndGame(true); // Победа
+            EndGame(true);
         }
     }
 
@@ -266,7 +295,6 @@ public partial class MinesweeperPage : ContentPage
     {
         isGameOver = true;
 
-        // Раскрыть все мины
         for (int r = 0; r < GridSize; r++)
         {
             for (int c = 0; c < GridSize; c++)
@@ -284,7 +312,6 @@ public partial class MinesweeperPage : ContentPage
                 }
                 else if (cell.IsFlagged && !cell.IsMine)
                 {
-                    // Показать неправильно поставленные флаги
                     cell.Button.Text = "❌";
                 }
             }

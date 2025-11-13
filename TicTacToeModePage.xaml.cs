@@ -12,7 +12,7 @@ public partial class TicTacToeModePage : ContentPage
         var button = sender as Button;
         if (button?.CommandParameter is string mode)
         {
-            // Передаем выбранный режим (Human или Bot) как параметр запроса (query parameter)
+            // Передаем выбранный режим (Human или Bot)
             await Shell.Current.GoToAsync($"TicTacToeGame?mode={mode}");
         }
     }

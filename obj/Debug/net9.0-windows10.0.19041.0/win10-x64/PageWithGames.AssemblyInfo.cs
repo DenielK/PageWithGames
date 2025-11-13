@@ -18,7 +18,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PageWithGames")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+a9b31c94fd363662b0af843cd4e6c2667d8f0b4a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+833503a6371e58111169f38eb019276886f8a0fd")]
 [assembly: System.Reflection.AssemblyProductAttribute("PageWithGames")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PageWithGames")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

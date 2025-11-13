@@ -15,8 +15,7 @@ public partial class MatchingGamePage : ContentPage
 
     private readonly List<string> AvailableSymbols = new() { "🍎", "🍌", "🥝", "🍇", "🍍", "🍓", "🍒", "🥭" };
 
-    // Игровые переменные (Исправлено: добавлены '?')
-    private List<string>? gameSymbols; // Может быть null до первого запуска SetupGame()
+    private List<string>? gameSymbols;
     private Button? firstCard = null;
     private Button? secondCard = null;
     private bool isBusy = false;
@@ -25,7 +24,6 @@ public partial class MatchingGamePage : ContentPage
     private int totalMoves = 0;
     private int secondsElapsed = 0;
 
-    // Флаг для контроля Dispatcher.StartTimer (заменяет IDispatcherTimer)
     private bool isTimerActive = false;
 
     public MatchingGamePage()
@@ -42,7 +40,7 @@ public partial class MatchingGamePage : ContentPage
 
     private void SetupGame()
     {
-        // 1. Очистка и сброс состояния
+        //сброс состояния
         GameGrid.Children.Clear();
         firstCard = null;
         secondCard = null;
@@ -50,41 +48,36 @@ public partial class MatchingGamePage : ContentPage
         matchesFound = 0;
         totalMoves = 0;
 
-        // 2. Установка и запуск Таймера (С ИСПОЛЬЗОВАНИЕМ StartTimer)
+        //запуск Таймера
         secondsElapsed = 0;
 
-        // Выключаем старый таймер и включаем новый флаг
         isTimerActive = false;
         isTimerActive = true;
 
-        // ИСПОЛЬЗУЕМ Dispatcher.StartTimer - наиболее надежный метод в MAUI
         Dispatcher.StartTimer(
             TimeSpan.FromSeconds(1),
-            () => // Функция обратного вызова (Func<bool>)
+            () =>
             {
                 if (!isTimerActive)
                 {
-                    return false; // Останавливаем таймер
+                    return false;
                 }
 
-                // Логика тика
                 secondsElapsed++;
-                // Обновление UI
                 StatusLabel.Text = $"Ходов: {totalMoves} | Время игры: {secondsElapsed} сек.";
 
-                return true; // Продолжаем работу
+                return true;
             }
         );
 
         StatusLabel.Text = $"Ходов: {totalMoves} | Время игры: {secondsElapsed} сек.";
 
-        // 3. Генерация и перемешивание символов
         gameSymbols = AvailableSymbols
             .Concat(AvailableSymbols)
             .OrderBy(x => Guid.NewGuid())
             .ToList();
 
-        // 4. Динамическое создание кнопок
+        //Динамическое создание кнопок
         for (int row = 0; row < GridSize; row++)
         {
             for (int col = 0; col < GridSize; col++)
@@ -160,14 +153,14 @@ public partial class MatchingGamePage : ContentPage
 
         firstCard = null;
         secondCard = null;
-        isBusy = false; // Разблокируем клики
+        isBusy = false;
     }
 
     private async Task CheckWin()
     {
         if (matchesFound == TotalPairs)
         {
-            isTimerActive = false; // ОСТАНОВКА ТАЙМЕРА через флаг
+            isTimerActive = false;
             await DisplayAlert("Победа!", $"Вы нашли все пары за {totalMoves} ходов и {secondsElapsed} секунд!", "Отлично"); // ДОБАВЛЕНО: await
         }
     }

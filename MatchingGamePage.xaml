@@ -9,7 +9,7 @@
         <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
             <Label x:Name="StatusLabel" 
                    Text="Найдите все пары!" 
-                   FontSize="22"
+                   FontSize="18"
                    VerticalOptions="Center" />
 
             <Button Text="Перезапуск" 

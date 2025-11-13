@@ -8,7 +8,7 @@ public partial class MainPage : ContentPage
     {
         InitializeComponent();
 
-        Routing.RegisterRoute("Minesweeper", typeof(ContentPage));
+        Routing.RegisterRoute("Minesweeper", typeof(MinesweeperPage));
         Routing.RegisterRoute("Puzzle", typeof(ContentPage));
     }
 
@@ -23,10 +23,8 @@ public partial class MainPage : ContentPage
         }
     }
 
-    // --- ЗАГЛУШКА ДЛЯ НАСТРОЙКИ ТЕМЫ ---
     private void OnThemeToggled(object sender, EventArgs e)
     {
-        // Пока просто переключаем тему, логика переключения будет в следующем шаге
         if (Application.Current.RequestedTheme == AppTheme.Dark)
         {
             Application.Current.UserAppTheme = AppTheme.Light;
@@ -39,25 +37,16 @@ public partial class MainPage : ContentPage
         }
     }
 
-    // --- ЗАГЛУШКА ДЛЯ НАСТРОЙКИ ЯЗЫКА ---
     private async void OnLanguageClicked(object sender, EventArgs e)
     {
-        // 1. Определяем текущий язык и выбираем следующий
         string currentCulture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
         string newCulture = (currentCulture == "en") ? "en" : "ru";
 
-        // 2. Устанавливаем новую культуру
         CultureInfo.CurrentCulture = new CultureInfo(newCulture);
         CultureInfo.CurrentUICulture = new CultureInfo(newCulture);
 
-        // 3. Перезагрузка UI для применения новых строк из RESX
-        // В .NET MAUI самый простой способ заставить UI перерисоваться с новыми ресурсами
-        // — это перезапустить (или переинициализировать) главную страницу.
-
-        // Мы используем простой подход: переходим к AppShell, который заново загрузит MainPage.
         await Shell.Current.GoToAsync("//MainPage");
 
-        // Отображение уведомления о смене языка
         await DisplayAlert("Settings", $"Language switched to {(newCulture == "ru" ? "Русский" : "English")}", "OK");
     }
 }
